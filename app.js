@@ -16,7 +16,13 @@ app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
 });
 
-app.get('/', (req, res) => {
-  res.send('¡Hola Mundo!');
+app.get('/cards', async (req, res) => {
+    try {
+        const cards = await db.any('SELECT * FROM cartas');
+        res.json(cards);
+    } catch (error) {
+        console.error('Error al obtener los datos de la tabla "cartas":', error);
+        res.status(500).json({ error: 'Ocurrió un error al obtener los datos de la tabla "cartas"' });
+    }
 });
 
