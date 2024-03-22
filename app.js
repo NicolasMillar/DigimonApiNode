@@ -17,12 +17,15 @@ app.listen(port, () => {
 });
 
 app.get('/cards', async (req, res) => {
+    const { booster, cardName } = req.query;
     try {
-        const cards = await db.any('SELECT * FROM cartas');
+        const query = `SELECT * FROM cartas where booster = $1 and nombre like $2`;
+        const cards = await db.any(query, [booster, `%${cardName}%`]);
         res.json(cards);
     } catch (error) {
         console.error('Error al obtener los datos de la tabla "cartas":', error);
         res.status(500).json({ error: 'Ocurrió un error al obtener los datos de la tabla "cartas"' });
     }
 });
+
 
