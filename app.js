@@ -18,9 +18,27 @@ app.listen(port, () => {
 
 app.get('/cards', async (req, res) => {
     const { booster, cardName } = req.query;
+    let query = `SELECT * FROM cartas`;
+    const conditions = [];
+    const values = [];
+
+    // Agregar condiciones según los parámetros proporcionados
+    if (booster) {
+        conditions.push(`booster = $${conditions.length + 1}`);
+        values.push(booster);
+    }
+    if (cardName) {
+        conditions.push(`nombre ILIKE $${conditions.length + 1}`);
+        values.push(`%${cardName}%`);
+    }
+
+    // Si hay al menos una condición, añadirla a la consulta
+    if (conditions.length) {
+        query += ` WHERE ${conditions.join(' AND ')}`;
+    }
+
     try {
-        const query = `SELECT * FROM cartas where booster = $1 and nombre like $2`;
-        const cards = await db.any(query, [booster, `%${cardName}%`]);
+        const cards = await db.any(query, values);
         res.json(cards);
     } catch (error) {
         console.error('Error al obtener los datos de la tabla "cartas":', error);
