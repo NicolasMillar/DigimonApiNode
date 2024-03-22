@@ -37,6 +37,7 @@ app.get('/cards', async (req, res) => {
         query += ` WHERE ${conditions.join(' AND ')}`;
     }
 
+    //entrega los resultados de la consulta o arroja un error en caso de ser necesario
     try {
         const cards = await db.any(query, values);
         res.json(cards);
