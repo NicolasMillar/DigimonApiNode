@@ -47,4 +47,16 @@ app.get('/cards', async (req, res) => {
     }
 });
 
+app.get('/price', async (req, res) => {
+    const { cardId } = req.query; 
+
+    try {
+        let query = `SELECT * FROM carta WHERE id_carta = $1`;
+        const cardPrices = await db.any(query, [cardId]);
+        res.json(cardPrices);
+    } catch (error) {
+        console.error('Error al obtener los datos de la tabla "carta":', error);
+        res.status(500).json({ error: 'Ocurrió un error al obtener los datos de la tabla "carta"' });
+    }
+});
 
