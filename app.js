@@ -16,6 +16,10 @@ app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
 });
 
+app.get('/', async (req, res) => {
+    res.json({ message: 'Bienvenido a la API de Cartas' });
+});
+
 app.get('/cards', async (req, res) => {
     const { booster, cardName } = req.query;
     let query = `SELECT * FROM cartas`;
